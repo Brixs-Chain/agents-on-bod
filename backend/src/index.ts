@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import { SecurityAgent } from '../../core/SecurityAgent';
-import { verifyContract } from './compiler';
-import { proposeFixes } from './fixer';
+import { SecurityAgent } from '../../core/SecurityAgent.ts';
+import { verifyContract } from './compiler.ts';
+import { proposeFixes } from './fixer.ts';
 
 const app = express();
 app.use(cors());
