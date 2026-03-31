@@ -1,0 +1,30 @@
+{
+  "name": "brixs-platform",
+  "version": "1.0.0",
+  "description": "AI-powered smart contract generation and autonomous auditing platform.",
+  "main": "backend/src/index.ts",
+  "scripts": {
+    "dev:backend": "ts-node backend/src/index.ts",
+    "dev:dashboard": "next dev dashboard",
+    "build:backend": "tsc --project tsconfig.json",
+    "build:dashboard": "next build dashboard",
+    "start:backend": "node dist/backend/src/index.js",
+    "onboard": "ts-node scripts/onboard-agent.ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.39",
+    "@types/react-dom": "^18.2.17"
+  }
+}

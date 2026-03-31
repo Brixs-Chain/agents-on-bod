@@ -1,0 +1,120 @@
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(20, 20, 30, 0.7);
+  --accent-primary: #7c4dff;
+  --accent-secondary: #00e5ff;
+  --text-main: #e0e0e0;
+  --text-muted: #94a3b8;
+  --danger: #ff5252;
+  --warning: #ffd740;
+  --success: #69f0ae;
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Outfit', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: 80px 1fr;
+  height: 100vh;
+}
+
+/* Glass Card Style */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(124, 77, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(124, 77, 255, 0.1);
+}
+
+/* Header & Sidebar */
+.header {
+  grid-column: 1 / span 2;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  background: rgba(10, 10, 15, 0.8);
+  z-index: 10;
+}
+
+.sidebar {
+  border-right: 1px solid var(--glass-border);
+  padding: 40px 20px;
+}
+
+/* Main Layout */
+.main-content {
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* Typography & Interactive */
+h1, h2, h3 {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), #6200ea);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+/* Auditor Visuals */
+.code-preview {
+  font-family: 'Fira Code', monospace;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent-primary);
+  white-space: pre-wrap;
+  color: #dcdcdc;
+}
+
+.severity-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.high { background: rgba(255, 82, 82, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+.medium { background: rgba(255, 215, 64, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+.low { background: rgba(105, 240, 174, 0.2); color: var(--success); border: 1px solid var(--success); }
