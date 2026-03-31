@@ -1,4 +1,4 @@
-import { OnboardingAgent } from '../core/OnboardingAgent.ts';
+import { OnboardingAgent } from '../core/OnboardingAgent.js';
 
 async function main() {
     console.log("========================================");

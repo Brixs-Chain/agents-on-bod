@@ -3,7 +3,7 @@ import {
   PERSONA_EXPLOITER, 
   PERSONA_DEVELOPER, 
   SURFACE_SCAN_PROMPT 
-} from './Prompts.ts';
+} from './Prompts.js';
 
 /**
  * PHASE 1: Surface Scan

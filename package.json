@@ -1,6 +1,7 @@
 {
   "name": "brixs-platform",
   "version": "1.0.0",
+  "type": "module",
   "description": "AI-powered smart contract generation and autonomous auditing platform.",
   "main": "backend/src/index.ts",
   "scripts": {
