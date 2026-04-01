@@ -21,6 +21,35 @@ export default function Dashboard() {
   const [report, setReport] = useState<AuditReport | null>(null);
   const [fixedCode, setFixedCode] = useState<string | null>(null);
   const [isAuditing, setIsAuditing] = useState(false);
+  const [isCompiling, setIsCompiling] = useState(false);
+  const [compileData, setCompileData] = useState<any>(null);
+
+  const startCompile = async () => {
+    if (!code) return alert("Please paste some Solidity code first.");
+    
+    setIsCompiling(true);
+    setCompileData(null);
+
+    try {
+      const response = await fetch('http://localhost:3001/api/compile', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, name: "BrixsContract" }) 
+      });
+
+      const data = await response.json();
+      setCompileData(data);
+      
+      if (!data.success) {
+        console.error("Compilation failed", data.compilation.errors);
+      }
+    } catch (error) {
+      console.error("Connection error:", error);
+      alert("Could not connect to the Compiler API.");
+    } finally {
+      setIsCompiling(false);
+    }
+  };
 
   const startAudit = async () => {
     if (!code) return alert("Please paste some Solidity code first.");
@@ -111,15 +140,25 @@ export default function Dashboard() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '32px' }}>
           {/* Code Input / Preview */}
           <div className="glass-card" style={{ minHeight: '500px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', gap: '10px' }}>
               <h3>Smart Contract Input</h3>
-              <button 
-                className="btn-primary" 
-                onClick={startAudit}
-                disabled={isAuditing}
-              >
-                {isAuditing ? 'AI Reasoning...' : '🚀 Start AI Audit'}
-              </button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  className="btn-primary" 
+                  style={{ background: 'var(--accent-secondary)' }}
+                  onClick={startCompile}
+                  disabled={isCompiling}
+                >
+                  {isCompiling ? 'Compiling...' : '⚡ Compile & Lint'}
+                </button>
+                <button 
+                  className="btn-primary" 
+                  onClick={startAudit}
+                  disabled={isAuditing}
+                >
+                  {isAuditing ? 'AI Reasoning...' : '🚀 Start AI Audit'}
+                </button>
+              </div>
             </div>
             
             {fixedCode ? (
@@ -135,13 +174,47 @@ export default function Dashboard() {
                 </button>
               </div>
             ) : (
-              <textarea 
-                className="code-preview" 
-                style={{ width: '100%', minHeight: '400px', border: 'none', resize: 'none', background: '#111', color: '#0f0', fontFamily: 'monospace' }}
-                placeholder="Paste your Solidity smart contract here (e.g. vulnerable withdraw function)..."
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <textarea 
+                  className="code-preview" 
+                  style={{ width: '100%', minHeight: '300px', border: 'none', resize: 'none', background: '#111', color: '#0f0', fontFamily: 'monospace' }}
+                  placeholder="Paste your Solidity smart contract here..."
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
+                
+                {/* Compiler & Linter Diagnostics */}
+                {compileData && (
+                  <div className="glass-card" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid #333' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <h4 style={{ margin: 0 }}>📊 Real-time Diagnostics</h4>
+                      <span className={`severity-badge ${compileData.success ? 'low' : 'high'}`}>
+                        {compileData.success ? 'Build Success' : 'Build Failed'}
+                      </span>
+                    </div>
+                    
+                    <div style={{ fontSize: '0.85rem', maxHeight: '150px', overflowY: 'auto' }}>
+                      {/* Compiler Errors/Warnings */}
+                      {compileData.compilation.errors && compileData.compilation.errors.map((e: any, i: number) => (
+                        <div key={i} style={{ color: e.severity === 'error' ? 'var(--danger)' : 'var(--warning)', padding: '4px 0', borderBottom: '1px solid #222' }}>
+                          [{e.severity.toUpperCase()}] Line {e.line}: {e.message}
+                        </div>
+                      ))}
+                      
+                      {/* Linter Findings */}
+                      {compileData.linting && compileData.linting.map((l: any, i: number) => (
+                        <div key={`lint-${i}`} style={{ color: 'var(--accent-secondary)', padding: '4px 0', borderBottom: '1px solid #222' }}>
+                          [LINT] Line {l.line}: {l.issue} ({l.rule})
+                        </div>
+                      ))}
+                      
+                      {compileData.success && !compileData.compilation.warnings.length && !compileData.linting.length && (
+                        <div style={{ color: 'var(--success)' }}>✨ No issues found. Contract is clean and compiles successfully.</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
