@@ -1,4 +1,4 @@
-import { SecurityAgent } from './SecurityAgent';
+import { LocalLLMClient } from './LocalLLMClient.js';
 
 /**
  * OnboardingAgent
@@ -7,11 +7,19 @@ import { SecurityAgent } from './SecurityAgent';
  */
 export class OnboardingAgent {
     public static async onboardingSystem(): Promise<{ success: boolean; status: string }> {
-        console.log("🚀 Starting Brixs Agent Onboarding...");
+        console.log("🚀 Starting Brixs Agent Onboarding (Local Mode)...");
         
-        // 1. Check for API Connectivity
-        // In production: await checkAnthropicConnection();
-        console.log("   [Check]: AI API Connectivity... OK");
+        // 1. Check for Ollama Connectivity
+        const isOllamaRunning = await LocalLLMClient.healthCheck();
+        
+        if (!isOllamaRunning) {
+            console.log("   [Check]: AI API Connectivity... FAILED (Is Ollama running?)");
+            return {
+                success: false,
+                status: "Ollama not detected or model not found. Please run 'ollama run deepseek-coder-v2'."
+            };
+        }
+        console.log("   [Check]: Local AI Service (Ollama)... OK");
 
         // 2. Load specialized security datasets
         // In production: await loadSecurityDataset();
@@ -23,7 +31,7 @@ export class OnboardingAgent {
 
         return {
             success: true,
-            status: "Full Security Agent onboarded and active."
+            status: "Full Security Agent onboarded and active via local model."
         };
     }
 }

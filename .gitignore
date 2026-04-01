@@ -10,10 +10,17 @@ out/
 build/
 
 # Environment
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# AI Binaries (Large Files)
+ollama.zip
+cloudflared.exe
+ollama-bin/
+tunnel_log.txt
 
 # Logs
 npm-debug.log*
